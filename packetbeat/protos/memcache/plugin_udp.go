@@ -20,6 +20,7 @@ package memcache
 // Memcache UDP Protocol Plugin implementation.
 
 import (
+	"errors"
 	"sync"
 	"time"
 
@@ -210,6 +211,9 @@ func (mc *memcache) onUDPMessage(
 func (mc *memcache) onUDPTrans(udp *udpTransaction) error {
 	debug("received memcache(udp) transaction")
 	trans := newTransaction(udp.request, udp.response)
+	if trans == nil {
+		return errors.New("udp trans is nil")
+	}
 	return mc.finishTransaction(trans)
 }
 

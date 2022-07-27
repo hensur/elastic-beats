@@ -20,6 +20,7 @@ package memcache
 // Memcache TCP Protocol Plugin implementation
 
 import (
+	"errors"
 	"time"
 
 	"github.com/elastic/beats/v7/libbeat/common"
@@ -328,6 +329,9 @@ func (mc *memcache) correlateTCP(conn *connection) error {
 func (mc *memcache) onTCPTrans(requ, resp *message) error {
 	debug("received memcache(tcp) transaction")
 	trans := newTransaction(requ, resp)
+	if trans == nil {
+		return errors.New("tcp trans is nil")
+	}
 	return mc.finishTransaction(trans)
 }
 

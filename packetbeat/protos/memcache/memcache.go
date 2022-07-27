@@ -21,6 +21,7 @@ package memcache
 
 import (
 	"encoding/json"
+	"errors"
 	"math"
 	"strings"
 	"time"
@@ -386,6 +387,10 @@ func (t *transaction) Init(msg *message) {
 }
 
 func (t *transaction) Event(event *beat.Event) error {
+	if t == nil {
+		debug("ERROR: transaction is nil")
+		return errors.New(".Event() call on nil transaction")
+	}
 	debug("count event notes: %v", len(t.Notes))
 	if err := t.Transaction.Event(event); err != nil {
 		logp.Warn("error filling generic transaction fields: %v", err)
